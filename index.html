@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wallet NFT & Balance Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+        }
+        input {
+            width: 400px;
+            padding: 10px;
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        #results {
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Wallet NFT & Balance Checker</h1>
+        <input type="text" id="walletAddress" placeholder="Enter wallet address (0x...)">
+        <br>
+        <button onclick="checkNFTs()">Check NFTs</button>
+        <button onclick="checkBalance()">Check Balance</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function checkNFTs() {
+            const walletAddress = document.getElementById('walletAddress').value;
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                const response = await fetch(`/nft/${walletAddress}`);
+                const data = await response.json();
+                resultsDiv.innerHTML = '<h2>NFTs:</h2>' + 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red">Error: ${error.message}</p>`;
+            }
+        }
+
+        async function checkBalance() {
+            const walletAddress = document.getElementById('walletAddress').value;
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                const response = await fetch(`/balance/${walletAddress}`);
+                const data = await response.json();
+                resultsDiv.innerHTML = '<h2>Balance:</h2>' +
+                    `<p>Balance: ${data.formatted} ETH</p>`;
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
